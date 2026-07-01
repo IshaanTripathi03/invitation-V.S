@@ -153,10 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openLightbox(g){
     if(!lightbox || !lightboxInner) return;
-    lightboxInner.innerHTML = `<div class="lightbox-card ${g.className}">
-      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.3" opacity="0.85"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-9 8"/></svg>
-      <div class="lightbox-caption">${g.label}</div>
-    </div>`;
+    lightboxInner.innerHTML = g.src
+      ? `<img src="${g.src}" alt="${g.label}" style="max-width:90vw;max-height:85vh;border-radius:8px;display:block;">
+         <div class="lightbox-caption">${g.label}</div>`
+      : `<div class="lightbox-card ${g.className}">
+           <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.3" opacity="0.85"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-9 8"/></svg>
+           <div class="lightbox-caption">${g.label}</div>
+         </div>`;
     lightbox.classList.add('open');
   }
 
@@ -173,26 +176,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if(e.target.id === 'lightbox') closeLightbox();
   });
 
-  /* ---------- GALLERY (placeholder masonry) ---------- */
+  /* ---------- GALLERY ---------- */
   const galleryData = [
-    { label: 'The Proposal', tall:true, className:'gallery-grad-proposal'},
-    { label: 'Haldi Mornings', className:'gallery-grad-haldi'},
-    { label: 'Mehendi Hands', className:'gallery-grad-mehendi'},
-    { label: 'Family & Friends', tall:true, className:'gallery-grad-family'},
-    { label: 'Sangeet Lights', className:'gallery-grad-sangeet'},
-    { label: 'Engagement Day', className:'gallery-grad-engagement'},
-    { label: 'Pre-Wedding Shoot', tall:true, className:'gallery-grad-prewedding'},
-    { label: 'Our Story', className:'gallery-grad-story'},
+    { label: 'The Proposal',        tall: true,  src: 'assets/images/proposal-img.jpeg',                                    className: 'gallery-grad-proposal'   },
+    // { label: 'Haldi Mornings',                   src: null,                                    className: 'gallery-grad-haldi'      },
+    // { label: 'Mehendi Hands',                    src: null,                                    className: 'gallery-grad-mehendi'    },
+    // { label: 'Family & Friends',    tall: true,  src: null,                                    className: 'gallery-grad-family'     },
+    // { label: 'Sangeet Lights',                   src: null,                                    className: 'gallery-grad-sangeet'    },
+    { label: 'Engagement Day',                   src: 'assets/images/engagement-img.jpeg',     className: 'gallery-grad-engagement' },
+    { label: 'Pre-Wedding Shoot',   tall: true,  src: 'assets/images/preWedding-img.jpeg',                                    className: 'gallery-grad-prewedding' },
+    { label: 'Our Story',                        src: 'assets/images/bike-img.jpeg',                                    className: 'gallery-grad-story'      },
+    { label: 'Chandni Chowk Photos',             src: 'assets/images/chandniChowk-img.jpeg',                                    className: 'gallery-grad-proposal'   },
   ];
   const grid = document.getElementById('masonry-grid');
   galleryData.forEach((g) => {
     const item = document.createElement('div');
     item.className = 'g-item' + (g.tall ? ' h-tall' : '');
-    item.innerHTML = `
-      <div class="g-fill gallery-fill ${g.className}">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.65"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-9 8"/></svg>
-      </div>
-      <div class="g-overlay">${g.label}</div>`;
+    const fill = g.src
+      ? `<img class="g-fill" src="${g.src}" alt="${g.label}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`
+      : `<div class="g-fill gallery-fill ${g.className}">
+           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.65"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-9 8"/></svg>
+         </div>`;
+    item.innerHTML = fill + `<div class="g-overlay">${g.label}</div>`;
     item.addEventListener('click', () => openLightbox(g));
     grid?.appendChild(item);
   });
